@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 직업 가치관 월드컵</title>
+    <style>
+        /* 기본 CSS 리셋 및 변수 정의 */
+        :root {
+            --primary-orange: #FF6B35;
+            --primary-orange-hover: #E85A24;
+            --primary-purple: #6C5CE7;
+            --primary-purple-hover: #5A4AD1;
+            --bg-gradient: linear-gradient(135deg, #FFF5F0 0%, #F3F0FF 100%);
+            --text-color: #2D3748;
+            --text-muted: #718096;
+            --card-bg: #FFFFFF;
+            --border-radius: 16px;
+            --shadow: 0 10px 25px -5px rgba(108, 92, 231, 0.1), 0 8px 10px -6px rgba(255, 107, 53, 0.1);
+            --focus-ring: 4px solid #FF9F1C;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            line-height: 1.6;
+        }
+
+        /* 컨테이너 */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #E2E8F0;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed #EDF2F7;
+        }
+
+        h1 {
+            color: var(--primary-purple);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            word-break: keep-all;
+        }
+
+        /* 안내 상자 */
+        .notice-box {
+            background-color: #FFFAF0;
+            border-left: 4px solid var(--primary-orange);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            color: #7B341E;
+            margin-bottom: 20px;
+            word-break: keep-all;
+        }
+
+        /* 화면 영역 설정 */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* 버튼 기본 스타일 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            min-height: 48px;
+            touch-action: manipulation;
+        }
+
+        .btn:focus-visible {
+            outline: var(--focus-ring);
+        }
+
+        .btn-orange {
+            background-color: var(--primary-orange);
+            color: white;
+        }
+
+        .btn-orange:hover {
+            background-color: var(--primary-orange-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-purple {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+
+        .btn-purple:hover {
+            background-color: var(--primary-purple-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--text-muted);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: #EDF2F7;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* 시작 화면 */
+        .start-content {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .start-icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            display: inline-block;
+        }
+
+        .guide-list {
+            text-align: left;
+            background: #F7FAFC;
+            padding: 16px 20px 16px 36px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .guide-list li {
+            margin-bottom: 8px;
+        }
+
+        /* 게임 화면 및 프로그레스 바 */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-purple);
+        }
+
+        .progress-bar-bg {
+            height: 12px;
+            background-color: #E2E8F0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-orange), var(--primary-purple));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* 대진 카드 레이아웃 */
+        .vs-container {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 16px;
+            align-items: stretch;
+            margin-bottom: 24px;
+        }
+
+        .vs-badge {
+            align-self: center;
+            background: var(--primary-orange);
+            color: white;
+            font-weight: 900;
+            font-size: 1.2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+
+        /* 가치관 카드 스타일 */
+        .card {
+            background: #FFFFFF;
+            border: 3px solid #E2E8F0;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            text-align: left;
+            width: 100%;
+        }
+
+        .card:hover, .card:focus-visible {
+            border-color: var(--primary-purple);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -5px rgba(108, 92, 231, 0.2);
+            outline: none;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            color: var(--primary-purple);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            word-break: keep-all;
+        }
+
+        .card-example {
+            background-color: #F7FAFC;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-left: 3px solid var(--primary-orange);
+            word-break: keep-all;
+        }
+
+        .card-select-btn {
+            margin-top: 16px;
+            width: 100%;
+            padding: 10px;
+            background-color: #EDF2F7;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            color: var(--text-color);
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .card:hover .card-select-btn {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+
+        /* 게임 컨트롤 버튼 */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        /* 결과 화면 */
+        .result-container {
+            text-align: center;
+        }
+
+        .winner-card {
+            background: linear-gradient(135deg, #FFF5F0 0%, #F3F0FF 100%);
+            border: 3px solid var(--primary-orange);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .winner-tag {
+            background: var(--primary-orange);
+            color: white;
+            font-weight: bold;
+            padding: 4px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .winner-title {
+            font-size: 2rem;
+            color: var(--primary-purple);
+            margin-bottom: 12px;
+        }
+
+        /* 성찰 질문 및 성찰지 입력 */
+        .reflection-section {
+            text-align: left;
+            margin: 28px 0;
+            background: #FAFAFA;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary-purple);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #EDF2F7;
+            padding-bottom: 8px;
+        }
+
+        .q-group {
+            margin-bottom: 16px;
+        }
+
+        .q-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            word-break: keep-all;
+        }
+
+        .q-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #CBD5E0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .q-input:focus {
+            border-color: var(--primary-purple);
+            outline: none;
+        }
+
+        /* 탈락한 가치관 목록 접기/열기 */
+        .eliminated-section {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        details {
+            background: #F7FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--text-color);
+            outline: none;
+        }
+
+        summary:focus-visible {
+            outline: var(--focus-ring);
+        }
+
+        .eliminated-list {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            list-style: none;
+        }
+
+        .eliminated-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            border: 1px solid #E2E8F0;
+        }
+
+        /* 탐색 안내 영역 */
+        .next-steps {
+            text-align: left;
+            background: #F0FFF4;
+            border: 1px solid #C6F6D5;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .next-steps h3 {
+            color: #22543D;
+            margin-bottom: 8px;
+        }
+
+        .next-steps ul {
+            padding-left: 20px;
+        }
+
+        .next-steps li {
+            margin-bottom: 6px;
+        }
+
+        .next-steps a {
+            color: #2F855A;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* 버튼 그룹 */
+        .result-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 640px) {
+            .container {
+                padding: 16px;
+            }
+
+            .vs-container {
+                grid-template-columns: 1fr;
+            }
+
+            .vs-badge {
+                justify-self: center;
+                margin: -8px 0;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+
+            .winner-title {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .result-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Print Stylesheet */
+        @media print {
+            body {
+                background: white;
+                color: black;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+
+            .no-print, .btn, .controls, details summary {
+                display: none !important;
+            }
+
+            details {
+                border: none;
+                padding: 0;
+            }
+
+            details[open] .eliminated-list {
+                display: grid;
+            }
+
+            .eliminated-section details {
+                display: block;
+            }
+
+            .eliminated-list {
+                display: grid !important;
+            }
+
+            .winner-card {
+                border: 2px solid #000;
+                background: #FFF;
+            }
+
+            .q-input {
+                border: 1px solid #999;
+                background: #FFF;
+                min-height: 80px;
+            }
+
+            .notice-box {
+                border-left-color: #000;
+                background: #FFF;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" role="main">
+        <!-- 헤더 -->
+        <header>
+            <h1>🏆 나의 직업 가치관 월드컵</h1>
+            <p class="subtitle">고등학교 1학년을 위한 진로 가치관 탐색 활동</p>
+        </header>
+
+        <!-- 유의사항 (공통) -->
+        <div class="notice-box no-print">
+            💡 <strong>안내:</strong> 두 가치관 모두 소중한 삶의 요소입니다. 이 활동은 정답이나 적성을 단정하는 심리검사가 아니며, 현재 자신이 상대적으로 더 중요하게 생각하는 가치를 돌아보는 참고 활동입니다.
+        </div>
+
+        <!-- 1. 시작 화면 -->
+        <section id="start-screen" class="screen active">
+            <div class="start-content">
+                <div class="start-icon">⚖️</div>
+                <h2>나에게 더 중요한 직업 가치는 무엇일까?</h2>
+                <p style="margin-top: 8px; color: var(--text-muted); word-break: keep-all;">
+                    총 8개의 직업 가치관 중, 본인이 일할 때 더 중요하다고 생각하는 가치를 선택해 보세요.
+                </p>
+
+                <ol class="guide-list">
+                    <li>8개의 가치관이 2개씩 짝을 이루어 대결합니다 (8강 → 4강 → 결승).</li>
+                    <li>설명과 예시를 읽고 마음이 더 끌리는 쪽을 클릭하세요.</li>
+                    <li>실수로 잘못 선택했다면 '이전으로 돌아가기'를 이용할 수 있습니다.</li>
+                    <li>모든 선택이 끝난 후 나의 선택을 돌아보는 질문을 작성해 보세요.</li>
+                </ol>
+
+                <button id="start-btn" class="btn btn-orange" style="font-size: 1.2rem; padding: 16px 36px;">
+                    월드컵 시작하기 🚀
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. 월드컵 토너먼트 화면 -->
+        <section id="game-screen" class="screen">
+            <!-- 진행 상태 표시 -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="round-title">8강 (1/4)</span>
+                    <span id="match-counter">1 / 7 대진</span>
+                </div>
+                <div class="progress-bar-bg" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div id="progress-bar" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <!-- 대진 카드 영역 -->
+            <div class="vs-container" id="match-cards">
+                <!-- 왼쪽 카드 -->
+                <button type="button" class="card" id="card-left" tabindex="0" aria-label="왼쪽 가치관 선택">
+                    <div>
+                        <div class="card-icon" id="left-icon">🛡️</div>
+                        <div class="card-title" id="left-title">안정성</div>
+                        <div class="card-desc" id="left-desc">설명</div>
+                        <div class="card-example" id="left-example">예시</div>
+                    </div>
+                    <div class="card-select-btn">선택하기</div>
+                </button>
+
+                <div class="vs-badge">VS</div>
+
+                <!-- 오른쪽 카드 -->
+                <button type="button" class="card" id="card-right" tabindex="0" aria-label="오른쪽 가치관 선택">
+                    <div>
+                        <div class="card-icon" id="right-icon">💰</div>
+                        <div class="card-title" id="right-title">보수</div>
+                        <div class="card-desc" id="right-desc">설명</div>
+                        <div class="card-example" id="right-example">예시</div>
+                    </div>
+                    <div class="card-select-btn">선택하기</div>
+                </button>
+            </div>
+
+            <!-- 하단 컨트롤 -->
+            <div class="controls">
+                <button id="undo-btn" class="btn btn-outline" disabled aria-label="이전 대진으로 돌아가기">
+                    ↩️ 이전으로 돌아가기
+                </button>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">신중하게 생각하여 선택해 주세요</span>
+            </div>
+        </section>
+
+        <!-- 3. 결과 및 성찰 화면 -->
+        <section id="result-screen" class="screen">
+            <div class="result-container">
+                <h2>🎉 활동 결과</h2>
+                <p style="color: var(--text-muted); margin-top: 4px;">이번 활동에서 내가 마지막까지 선택한 직업 가치관입니다.</p>
+
+                <!-- 최종 선택 카드 -->
+                <div class="winner-card">
+                    <span class="winner-tag">이번 활동에서 마지막까지 선택한 가치관</span>
+                    <div class="card-icon" id="winner-icon" style="font-size: 3.5rem;">👑</div>
+                    <div class="winner-title" id="winner-title">가치관 이름</div>
+                    <p id="winner-desc" style="font-size: 1rem; word-break: keep-all; max-width: 600px; margin: 0 auto 12px auto;">가치관 설명</p>
+                    <div id="winner-example" class="card-example" style="max-width: 600px; margin: 0 auto; text-align: left;">일상 예시</div>
+                </div>
+
+                <!-- 탈락한 가치관 살펴보기 -->
+                <div class="eliminated-section">
+                    <details>
+                        <summary>🔍 선택 과정에서 제외되었던 가치관들 다시보기</summary>
+                        <ul class="eliminated-list" id="eliminated-list">
+                            <!-- JS로 동적 생성 -->
+                        </ul>
+                    </details>
+                </div>
+
+                <!-- 성찰 질문 3가지 -->
+                <div class="reflection-section">
+                    <div class="section-title">
+                        <span>📝</span> 나의 진로 성찰지
+                    </div>
+
+                    <div class="q-group">
+                        <label for="q1" class="q-label">질문 1. 마지막까지 선택한 가치관이 나에게 중요한 이유는 무엇인가요?</label>
+                        <textarea id="q1" class="q-input" placeholder="이 가치관이 보장되는 직업 환경에서 일할 때 나의 모습이나 느낌을 적어보세요."></textarea>
+                    </div>
+
+                    <div class="q-group">
+                        <label for="q2" class="q-label">질문 2. 토너먼트를 진행하면서 가장 선택하기 어려웠던 대결(두 가치관)과 그 이유는 무엇이었나요?</label>
+                        <textarea id="q2" class="q-input" placeholder="예: '보수'와 '일과 삶의 균형' 중에서 둘 다 포기하기 힘들어 고민했다."></textarea>
+                    </div>
+
+                    <div class="q-group">
+                        <label for="q3" class="q-label">질문 3. 내가 선택한 가치를 실현할 수 있는 일이나 직업에는 어떤 것들이 있을까요?</label>
+                        <textarea id="q3" class="q-input" placeholder="떠오르는 직업이나 관심 있는 분야를 자유롭게 적어보세요."></textarea>
+                    </div>
+                </div>
+
+                <!-- 다음 탐색 활동 2가지 및 공식 가이드 -->
+                <div class="next-steps">
+                    <h3>💡 다음 진로 탐색 단계</h3>
+                    <ul>
+                        <li>
+                            <strong>단계 1: 공식 검사도구로 더 깊이 알아보기</strong><br>
+                            더 정교한 진로 진단을 받고 싶다면 교육부 공식 진로 정보망을 활용해 보세요.<br>
+                            👉 <a href="https://www.career.go.kr" target="_blank" rel="noopener noreferrer">커리어넷 직업가치관검사 바로가기 (www.career.go.kr)</a>
+                        </li>
+                        <li style="margin-top: 10px;">
+                            <strong>단계 2: 대학 및 학과 정보 탐색하기</strong><br>
+                            자신이 희망하는 가치가 잘 반영되는 전공이나 학과를 검색해 보세요.<br>
+                            👉 <a href="https://www.adiga.kr" target="_blank" rel="noopener noreferrer">대학어디가 공식 누리집 (www.adiga.kr)</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 저장 관련 서버 미연동 안내 -->
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;" class="no-print">
+                    * 작성한 내용은 서버로 자동 제출되지 않습니다. 결과 보관을 원할 경우 [결과 인쇄하기]를 통해 PDF로 저장하거나 인쇄해 주세요.
+                </p>
+
+                <!-- 결과 버튼 그룹 -->
+                <div class="result-buttons no-print">
+                    <button id="print-btn" class="btn btn-purple">
+                        🖨️ 결과 인쇄 / PDF 저장
+                    </button>
+                    <button id="restart-btn" class="btn btn-outline">
+                        🔄 다시 시작하기
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 푸터 -->
+        <footer class="no-print">
+            <p>본 도구는 정적 웹 페이지로 개인정보를 수집하거나 외부에 전송하지 않습니다.</p>
+        </footer>
+    </div>
+
+    <script>
+        /**
+         * 직업 가치관 8가지 데이터 정의
+         * (이해하기 쉬운 설명과 일상 사례 포함)
+         */
+        const VALUE_DATA = [
+            {
+                id: 'stability',
+                title: '안정성',
+                icon: '🛡️',
+                desc: '고용이 안정되고 걱정 없이 일정하게 일하는 것을 중요하게 생각합니다.',
+                example: '정년이 보장되거나 경기 변동의 영향을 적게 받는 환경에서 편안함을 느낍니다.'
+            },
+            {
+                id: 'reward',
+                title: '보수',
+                icon: '💰',
+                desc: '내가 일한 만큼 정당하고 높은 경제적 보상을 받는 것을 중요하게 생각합니다.',
+                example: '높은 연봉, 공정한 성과급이나 인센티브를 받을 때 보람과 동기를 얻습니다.'
+            },
+            {
+                id: 'autonomy',
+                title: '자율성',
+                icon: '🧭',
+                desc: '내 방식과 일정에 맞추어 주도적으로 일하는 것을 중요하게 생각합니다.',
+                example: '재택근무, 유연근무제, 업무 진행 방식을 스스로 결정할 수 있는 환경을 선호합니다.'
+            },
+            {
+                id: 'growth',
+                title: '성장',
+                icon: '🌱',
+                desc: '일을 통해 끊임없이 새로운 지식을 배우고 발전하는 것을 중요하게 생각합니다.',
+                example: '전문성을 높일 수 있는 교육 기회나 새로운 도전 과제가 많은 일을 선호합니다.'
+            },
+            {
+                id: 'contribution',
+                title: '사회적 기여',
+                icon: '🤝',
+                desc: '남을 돕고 사회에 긍정적인 영향을 미치는 것을 중요하게 생각합니다.',
+                example: '공익을 실현하거나 타인의 삶을 개선하는 봉사적인 성격의 일에서 가치를 찾습니다.'
+            },
+            {
+                id: 'creativity',
+                title: '창의성',
+                icon: '💡',
+                desc: '독창적인 아이디어를 제안하고 새로운 것을 만들어내는 것을 중요하게 생각합니다.',
+                example: '새로운 상품·콘텐츠 기획, 예술, 디자인, 혁신적인 문제 해결 활동을 즐깁니다.'
+            },
+            {
+                id: 'balance',
+                title: '일과 삶의 균형',
+                icon: '⚖️',
+                desc: '일하는 시간과 개인 생활(휴식, 취미, 가족)의 균형을 맞추는 것을 중요하게 생각합니다.',
+                example: '정시 퇴근, 주말 휴무, 충분한 휴가가 보장되어 퇴근 후 내 삶을 누리는 것을 좋아합니다.'
+            },
+            {
+                id: 'collaboration',
+                title: '협업',
+                icon: '🧩',
+                desc: '동료들과 서로 도우며 함게 목표를 이루어 나가는 것을 중요하게 생각합니다.',
+                example: '팀 프로젝트에서 기꺼이 소통하고 서로의 강점을 모아 협력할 때 시너지를 느낍니다.'
+            }
+        ];
+
+        // 앱 상태 관리 변수
+        let currentRoundList = [];    // 현재 라운드 참여 가치관 목록
+        let nextRoundList = [];       // 다음 라운드 진출 가치관 목록
+        let currentMatchIndex = 0;   // 현재 라운드의 대진 번호
+        let historyStack = [];        // 이전으로 돌아가기(Undo)를 위한 상태 이력
+        let totalMatchesCount = 7;    // 8강 기준 총 대진 수 (4 + 2 + 1)
+        let completedMatchesCount = 0; // 진행한 대진 수
+
+        // DOM 요소 참조
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const resultScreen = document.getElementById('result-screen');
+
+        const startBtn = document.getElementById('start-btn');
+        const undoBtn = document.getElementById('undo-btn');
+        const printBtn = document.getElementById('print-btn');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const cardLeft = document.getElementById('card-left');
+        const cardRight = document.getElementById('card-right');
+
+        const roundTitle = document.getElementById('round-title');
+        const matchCounter = document.getElementById('match-counter');
+        const progressBar = document.getElementById('progress-bar');
+
+        // 게임 시작 초기화
+        function initGame() {
+            // 배열 복사 및 무작위 셔플 (Fisher-Yates 알고리즘)
+            currentRoundList = [...VALUE_DATA];
+            shuffleArray(currentRoundList);
+
+            nextRoundList = [];
+            currentMatchIndex = 0;
+            historyStack = [];
+            completedMatchesCount = 0;
+
+            showScreen(gameScreen);
+            renderCurrentMatch();
+        }
+
+        // 배열 셔플 함수
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // 화면 전환 함수
+        function showScreen(screenToShow) {
+            [startScreen, gameScreen, resultScreen].forEach(s => s.classList.remove('active'));
+            screenToShow.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 라운드 이름 반환 (8강, 4강, 결승)
+        function getRoundName(totalInRound) {
+            if (totalInRound === 8) return '8강';
+            if (totalInRound === 4) return '4강';
+            if (totalInRound === 2) return '결승전';
+            return '토너먼트';
+        }
+
+        // 현재 대진 화면 렌더링
+        function renderCurrentMatch() {
+            const totalInRound = currentRoundList.length;
+            const roundName = getRoundName(totalInRound);
+            const matchInRound = Math.floor(currentMatchIndex / 2) + 1;
+            const totalMatchesInRound = totalInRound / 2;
+
+            // 라운드 정보 및 프로그레스바 업데이트
+            roundTitle.textContent = `${roundName} (${matchInRound}/${totalMatchesInRound})`;
+            matchCounter.textContent = `${completedMatchesCount + 1} / ${totalMatchesCount} 대진`;
+            
+            const progressPercent = (completedMatchesCount / totalMatchesCount) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // 카드의 가치관 정보 표시
+            const leftData = currentRoundList[currentMatchIndex];
+            const rightData = currentRoundList[currentMatchIndex + 1];
+
+            updateCard('left', leftData);
+            updateCard('right', rightData);
+
+            // 되돌리기 버튼 상태
+            undoBtn.disabled = historyStack.length === 0;
+        }
+
+        // 카드 내용 업데이트
+        function updateCard(side, data) {
+            document.getElementById(`${side}-icon`).textContent = data.icon;
+            document.getElementById(`${side}-title`).textContent = data.title;
+            document.getElementById(`${side}-desc`).textContent = data.desc;
+            document.getElementById(`${side}-example`).textContent = `💡 예시: ${data.example}`;
+        }
+
+        // 가치관 선택 처리
+        function selectValue(selectedIndex) {
+            const leftData = currentRoundList[currentMatchIndex];
+            const rightData = currentRoundList[currentMatchIndex + 1];
+
+            const selected = (selectedIndex === 0) ? leftData : rightData;
+            const unselected = (selectedIndex === 0) ? rightData : leftData;
+
+            // 이전 상태를 히스토리 스택에 저장 (Deep Copy)
+            historyStack.push({
+                currentRoundList: JSON.parse(JSON.stringify(currentRoundList)),
+                nextRoundList: JSON.parse(JSON.stringify(nextRoundList)),
+                currentMatchIndex: currentMatchIndex,
+                completedMatchesCount: completedMatchesCount
+            });
+
+            // 선택된 가치관 다음 라운드로 진출
+            nextRoundList.push(selected);
+            currentMatchIndex += 2;
+            completedMatchesCount++;
+
+            // 현재 라운드의 대진이 모두 끝난 경우
+            if (currentMatchIndex >= currentRoundList.length) {
+                if (nextRoundList.length === 1) {
+                    // 최종 우승 가치관 결정 -> 결과 화면
+                    showResult(nextRoundList[0]);
+                    return;
+                } else {
+                    // 다음 라운드로 이동 (8강 -> 4강 -> 결승)
+                    currentRoundList = [...nextRoundList];
+                    nextRoundList = [];
+                    currentMatchIndex = 0;
+                }
+            }
+
+            renderCurrentMatch();
+        }
+
+        // 이전 대진으로 돌아가기 (Undo)
+        function undoLastChoice() {
+            if (historyStack.length === 0) return;
+
+            const previousState = historyStack.pop();
+            currentRoundList = previousState.currentRoundList;
+            nextRoundList = previousState.nextRoundList;
+            currentMatchIndex = previousState.currentMatchIndex;
+            completedMatchesCount = previousState.completedMatchesCount;
+
+            renderCurrentMatch();
+        }
+
+        // 결과 화면 표시
+        function showResult(winner) {
+            // 우승 가치관 카드 채우기
+            document.getElementById('winner-icon').textContent = winner.icon;
+            document.getElementById('winner-title').textContent = winner.title;
+            document.getElementById('winner-desc').textContent = winner.desc;
+            document.getElementById('winner-example').textContent = `💡 예시: ${winner.example}`;
+
+            // 탈락한 가치관 목록 생성 (우승자 제외)
+            const eliminatedListUI = document.getElementById('eliminated-list');
+            eliminatedListUI.innerHTML = '';
+
+            VALUE_DATA.filter(v => v.id !== winner.id).forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'eliminated-item';
+                li.innerHTML = `<strong>${item.icon} ${escapeHtml(item.title)}</strong>`;
+                eliminatedListUI.appendChild(li);
+            });
+
+            showScreen(resultScreen);
+        }
+
+        // XSS 방지를 위한 HTML 이스케이프 함수
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // 이벤트 리스너 등록
+        startBtn.addEventListener('click', initGame);
+
+        cardLeft.addEventListener('click', () => selectValue(0));
+        cardRight.addEventListener('click', () => selectValue(1));
+
+        // 키보드 접근성 (Enter/Space 키로 카드 선택)
+        cardLeft.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selectValue(0);
+            }
+        });
+        cardRight.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selectValue(1);
+            }
+        });
+
+        undoBtn.addEventListener('click', undoLastChoice);
+
+        restartBtn.addEventListener('click', () => {
+            if (confirm('처음부터 다시 시작하시겠습니까? 작성 중인 내용은 초기화됩니다.')) {
+                // 성찰지 입력란 초기화
+                document.getElementById('q1').value = '';
+                document.getElementById('q2').value = '';
+                document.getElementById('q3').value = '';
+                initGame();
+            }
+        });
+
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+
+        // 초기 화면 로드
+        window.onload = function() {
+            showScreen(startScreen);
+        };
+    </script>
+</body>
+</html>
